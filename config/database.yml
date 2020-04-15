@@ -1,0 +1,21 @@
+default: &default
+  adapter: mysql2
+  encoding: utf8mb4
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: root
+  password: root
+  port: 8889
+  timeout: 5000
+
+development:
+  <<: *default
+  database: building_rental
+
+test:
+  <<: *default
+  database: building_rental
+
+production:
+  <<: *default
+  database: building_rental
+  password: <%= ENV['BUILDING_RENTAL_DATABASE_PASSWORD'] %>

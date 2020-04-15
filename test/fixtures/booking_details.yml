@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  booked_by_user_id: 1
+  unit_number: MyString
+  price: MyString
+  name: MyString
+  contact: MyString
+  payment_receipt: MyString
+  SPA_signed: false
+  booking_confirmation: false
+  is_active: false
+
+two:
+  booked_by_user_id: 1
+  unit_number: MyString
+  price: MyString
+  name: MyString
+  contact: MyString
+  payment_receipt: MyString
+  SPA_signed: false
+  booking_confirmation: false
+  is_active: false

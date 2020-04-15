@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  unit_number: MyString
+  user_id: 1
+  action: MyString
+  admin_user_id: 1
+  remark: MyString
+
+two:
+  unit_number: MyString
+  user_id: 1
+  action: MyString
+  admin_user_id: 1
+  remark: MyString

@@ -1,0 +1,37 @@
+Users:
+  name
+  password
+  type
+  contact
+  email
+Agent_details
+  user_id
+  REN
+  agency_name
+  SPA_Signed
+
+Booking_Details:
+  booked_by_user_id
+  unit_number
+  price
+  name
+  contact
+  email
+  agent
+  payment_receipt
+  SPA_Signed
+  booking_confirmation
+  is_active
+
+Log 
+  unit_number
+  user_id
+  action
+  admin_name
+  remarks
+Announcement
+  Text
+  user_id
+
+
+
