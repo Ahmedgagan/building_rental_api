@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   namespace 'api' do
     namespace 'v1' do
       load File.expand_path('../../app/controllers/api/v1/login_controller.rb', __FILE__)
+      resources :unit_details
       post '/signup' => 'login#signup'
       post '/login' => 'login#userLogin'
       delete '/user' => 'login#removeUser'

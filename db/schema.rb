@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_14_210930) do
+ActiveRecord::Schema.define(version: 2020_04_16_145138) do
 
   create_table "agent_details", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
@@ -39,6 +39,7 @@ ActiveRecord::Schema.define(version: 2020_04_14_210930) do
     t.boolean "is_active"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "unit_id"
   end
 
   create_table "logs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -47,6 +48,20 @@ ActiveRecord::Schema.define(version: 2020_04_14_210930) do
     t.string "action"
     t.integer "admin_user_id"
     t.string "remark"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "unit_details", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "unit_block"
+    t.string "unit_block_name"
+    t.string "unit_number"
+    t.integer "unit_floor"
+    t.string "unit_price"
+    t.integer "unit_height"
+    t.integer "unit_width"
+    t.string "unit_type"
+    t.string "unit_view"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

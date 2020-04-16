@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  unit_block: MyString
+  unitunit_block_name: MyString
+  unit_number: MyString
+  unit_floor: 1
+  unit_price: MyString
+  unit_height: 1
+  unit_width: 1
+  unit_type: MyString
+  unit_view: MyString
+
+two:
+  unit_block: MyString
+  unitunit_block_name: MyString
+  unit_number: MyString
+  unit_floor: 1
+  unit_price: MyString
+  unit_height: 1
+  unit_width: 1
+  unit_type: MyString
+  unit_view: MyString

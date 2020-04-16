@@ -10,6 +10,18 @@ Agent_details
   agency_name
   SPA_Signed
 
+Uint_details:
+  unit_block
+  unit_block_name
+  unit_number
+  unit_floor
+  unit_price
+  unit_height
+  unit_width
+  unit_type
+  unit_view
+
+
 Booking_Details:
   booked_by_user_id
   unit_number
