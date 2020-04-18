@@ -47,12 +47,14 @@ module Api
       def updateUser
         user = User.find(params[:id])
         type = ""
-        if user.update_attributes(user_params)
+        if user.update(user_params)
           type = user.user_type
         end
         if type=="AGENT"
-          agent = AgentDetail.where("user_id=?",params[:id]).joins("INNER JOIN users b on agent_details.user_id = b.id").select("*")
-          if agent[0].update_attributes(agent_params)
+          agent = AgentDetail.where("user_id=?",params[:id])
+          p agent
+          if agent[0].update(agent_params)
+            agent = AgentDetail.where("user_id=?",params[:id]).joins("INNER JOIN users b on agent_details.user_id = b.id").select("*")
             render json: {status: '1', msg: 'user updated', data: agent[0]}, status: :ok
           else
             render json: {status: '0', msg: 'user not updated', data: agent[0].errors}, status: :unprocessable_entity  
@@ -61,6 +63,20 @@ module Api
           render json: {status: '1', msg: 'user updated', data: user}, status: :ok
         else
           render json: {status: '0', msg: 'user not updated', data: user.errors}, status: :unprocessable_entity  
+        end
+      end
+
+      def getUsers
+        user = User.order('created_at DESC');
+        render json: {status: '1', msg: 'All user details Loaded', data: user}, status: :ok
+      end
+
+      def getAgents
+        user = User.joins("INNER JOIN agent_details b on users.id = b.user_id").select("*").where("users.user_type = 'AGENT' AND users.is_active=1 AND b.SPA_signed=true");
+        if(user.length>0)
+          render json: {status: '1', msg: 'All Agent details Loaded', data: user}, status: :ok
+        else
+          render json: {status: '0', msg: 'No active agent found', data: user}, status: :unprocessable_entity
         end
       end
 
