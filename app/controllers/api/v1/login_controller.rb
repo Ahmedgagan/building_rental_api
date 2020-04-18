@@ -69,12 +69,12 @@ module Api
       end
 
       def getUsers
-        user = User.order('created_at DESC');
+        user = User.order('created_at DESC').where("is_active=true");
         render json: {status: '1', msg: 'All user details Loaded', data: user}, status: :ok
       end
 
       def getAgents
-        user = User.joins("INNER JOIN agent_details b on users.id = b.user_id").select("*").where("users.user_type = 'AGENT' AND users.is_active=true AND b.SPA_signed=true");
+        user = User.joins("INNER JOIN agent_details b on users.id = b.user_id").select("*").where("users.user_type = 'AGENT' AND users.is_active=true AND b."+'"SPA_signed"'+"=true");
         if(user.length>0)
           render json: {status: '1', msg: 'All Agent details Loaded', data: user}, status: :ok
         else
