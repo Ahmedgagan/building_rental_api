@@ -3,7 +3,7 @@ module Api
     class BookingDetailsController < ApplicationController
 
       def index
-        boking_details = BookingDetail.order('created_at DESC').where("is_active=true AND SPA_signed=true AND booking_confirmation=true");
+        boking_details = BookingDetail.order('created_at DESC').where("is_active=true AND "+'"SPA_signed"'+"=true AND booking_confirmation=true");
         render json: {status: '1', msg: 'All booking details Loaded', data: boking_details}, status: :ok
       end
 
@@ -50,7 +50,6 @@ module Api
       def update
         booking_detail = BookingDetail.find(params[:id]);
         if params[:payment_receipt]
-          
           file = params[:payment_receipt]
           params[:payment_receipt]= name = file.original_filename
           p params[:payment_receipt]
@@ -62,11 +61,10 @@ module Api
             File.open(path, "wb") do |f|
               f.write(File.read(file))
               if File.exist?(path)
-                booking_detail = BookingDetail.new(booking_details_params)
-                if booking_detail.save
-                  render json: {status: '1', msg: 'saved booking details',data:booking_detail}, status: :ok
+                if booking_detail.update(booking_details_params)
+                  render json: {status: '1', msg: 'Booking details Updated', data: booking_detail}, status: :ok
                 else
-                  render json: {status: '0', msg: 'Booking details not saved',data:booking_detail.error}, status: :unprocessable_entity
+                  render json: {status: '0', msg: 'Booking detail not Updated', data: booking_detail.error}, status: :unprocessable_entity
                 end
               else
                 render json: {status: '0', msg: 'booking receipt not saved',}, status: :unprocessable_entity  
@@ -75,12 +73,14 @@ module Api
           else
             render json: {status: '0', msg: 'booking receipt not saved because receipt already exists', data: {'error':'File Already Exists'}}, status: :unprocessable_entity  
           end
+        else
+          booking_detail = BookingDetail.find(params[:id]);
+          if booking_detail.update(booking_details_params)
+            render json: {status: '1', msg: 'Booking details Updated', data: booking_detail}, status: :ok
+          else
+            render json: {status: '0', msg: 'Booking detail not Updated', data: booking_detail.error}, status: :unprocessable_entity
+          end
         end
-        # if booking_detail.update(booking_details_params)
-        #   render json: {status: '1', msg: 'Booking details Deleted', data: booking_detail}, status: :ok
-        # else
-        #   render json: {status: '0', msg: 'Booking detail not Deleted', data: booking_detail.error}, status: :unprocessable_entity
-        # end
       end
 
       private
