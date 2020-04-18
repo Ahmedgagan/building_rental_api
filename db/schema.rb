@@ -12,7 +12,10 @@
 
 ActiveRecord::Schema.define(version: 2020_04_16_163634) do
 
-  create_table "agent_details", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
+  create_table "agent_details", force: :cascade do |t|
     t.integer "user_id"
     t.string "REN"
     t.boolean "SPA_signed"
@@ -20,14 +23,14 @@ ActiveRecord::Schema.define(version: 2020_04_16_163634) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "announcements", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "announcements", force: :cascade do |t|
     t.string "text"
     t.integer "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "booking_details", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "booking_details", force: :cascade do |t|
     t.integer "booked_by_user_id"
     t.string "unit_number"
     t.string "price"
@@ -43,7 +46,7 @@ ActiveRecord::Schema.define(version: 2020_04_16_163634) do
     t.string "remark"
   end
 
-  create_table "logs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "logs", force: :cascade do |t|
     t.string "unit_number"
     t.integer "user_id"
     t.string "action"
@@ -53,7 +56,7 @@ ActiveRecord::Schema.define(version: 2020_04_16_163634) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "unit_details", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "unit_details", force: :cascade do |t|
     t.string "unit_block"
     t.string "unit_block_name"
     t.string "unit_number"
@@ -67,7 +70,7 @@ ActiveRecord::Schema.define(version: 2020_04_16_163634) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "password"
     t.string "user_type"

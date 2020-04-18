@@ -7,22 +7,23 @@ module Api
           if params[:user_type]=="AGENT"
             agentDetail = AgentDetail.new(user_id:user.id,REN:params[:REN],SPA_signed:params[:SPA_signed])
             if agentDetail.save
-              render json: {status: '1', msg: 'saved user and agent details'}, status: :ok
+              login = User.where("email=? AND password=? AND is_active=true",params[:email],params[:password]).joins("INNER JOIN agent_details b on users.id = b.user_id").select("*")
+              render json: {status: '1', msg: 'saved user and agent details',data: login}, status: :ok
             else
               render json: {status: '0', msg: 'Saved department', data: agentDetail.errors}, status: :unprocessable_entity
             end
           end
-          render json: {status: '1', msg: 'Saved User'}, status: :ok
+          render json: {status: '1', msg: 'Saved User',data: user}, status: :ok
         else
           render json: {status: '0', msg: 'User not saved', data: user.errors}, status: :unprocessable_entity  
         end
       end
 
       def userLogin
-        login = User.where("email=? AND password=? AND is_active=1",params[:email],params[:password])
+        login = User.where("email=? AND password=? AND is_active=true",params[:email],params[:password])
         if login.length>0
           if(login[0].user_type!="ADMIN")
-            login = User.where("email=? AND password=? AND is_active=1",params[:email],params[:password]).joins("INNER JOIN agent_details b on users.id = b.user_id").select("*")
+            login = User.where("email=? AND password=? AND is_active=true",params[:email],params[:password]).joins("INNER JOIN agent_details b on users.id = b.user_id").select("*")
           end
           render json: {status: '1', msg: 'Login Successful', data:login}, status: :ok
         else
@@ -72,7 +73,7 @@ module Api
       end
 
       def getAgents
-        user = User.joins("INNER JOIN agent_details b on users.id = b.user_id").select("*").where("users.user_type = 'AGENT' AND users.is_active=1 AND b.SPA_signed=true");
+        user = User.joins("INNER JOIN agent_details b on users.id = b.user_id").select("*").where("users.user_type = 'AGENT' AND users.is_active=true AND b.SPA_signed=true");
         if(user.length>0)
           render json: {status: '1', msg: 'All Agent details Loaded', data: user}, status: :ok
         else

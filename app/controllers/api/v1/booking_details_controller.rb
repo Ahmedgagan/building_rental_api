@@ -3,7 +3,7 @@ module Api
     class BookingDetailsController < ApplicationController
 
       def index
-        boking_details = BookingDetail.order('created_at DESC').where("is_active=1 AND SPA_signed=1 AND booking_confirmation=1");
+        boking_details = BookingDetail.order('created_at DESC').where("is_active=true AND SPA_signed=true AND booking_confirmation=true");
         render json: {status: '1', msg: 'All booking details Loaded', data: boking_details}, status: :ok
       end
 

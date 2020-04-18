@@ -1,15 +1,19 @@
 default: &default
   # adapter: mysql2
-  adapter: postgreysql
+  adapter: postgresql
   # encoding: utf8mb4
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   # username: root
   # password: root
-  # port: 8889
+  # port: 888
   timeout: 5000
+
 
 development:
   <<: *default
+  # username: postgres
+  # password: 
+  port: 5432
   database: building_rental
 
 test:
