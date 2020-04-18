@@ -8,12 +8,13 @@ module Api
             agentDetail = AgentDetail.new(user_id:user.id,REN:params[:REN],SPA_signed:params[:SPA_signed])
             if agentDetail.save
               login = User.where("email=? AND password=? AND is_active=true",params[:email],params[:password]).joins("INNER JOIN agent_details b on users.id = b.user_id").select("*")
-              render json: {status: '1', msg: 'saved user and agent details',data: login}, status: :ok
+              render json: {status: '1', msg: 'saved user and agent details',data: login[0]}, status: :ok
             else
-              render json: {status: '0', msg: 'Saved department', data: agentDetail.errors}, status: :unprocessable_entity
+              render json: {status: '0', msg: 'agent details not saved', data: login.errors}, status: :unprocessable_entity
             end
+          else
+            render json: {status: '1', msg: 'Saved User',data: user}, status: :ok
           end
-          render json: {status: '1', msg: 'Saved User',data: user}, status: :ok
         else
           render json: {status: '0', msg: 'User not saved', data: user.errors}, status: :unprocessable_entity  
         end
