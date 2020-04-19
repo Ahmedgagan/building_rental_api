@@ -27,14 +27,14 @@ module Api
               if booking_detail.save
                 render json: {status: '1', msg: 'saved booking details',data:booking_detail}, status: :ok
               else
-                render json: {status: '0', msg: 'Booking details not saved',data:booking_detail.error}, status: :unprocessable_entity
+                render json: {status: '0', msg: 'Booking details not saved',data:booking_detail.error}, status: :ok
               end
             else
-              render json: {status: '0', msg: 'booking receipt not saved',}, status: :unprocessable_entity  
+              render json: {status: '0', msg: 'booking receipt not saved',}, status: :ok  
             end
           end
         else
-          render json: {status: '0', msg: 'booking receipt not saved because receipt already exists', data: {'error':'File Already Exists'}}, status: :unprocessable_entity  
+          render json: {status: '0', msg: 'booking receipt not saved because receipt already exists', data: {'error':'File Already Exists'}}, status: :ok  
         end
       end
 
@@ -43,7 +43,7 @@ module Api
         if booking_detail.update(booking_details_params)
           render json: {status: '1', msg: 'Booking details Deleted', data: booking_detail}, status: :ok
         else
-          render json: {status: '0', msg: 'Booking detail not Deleted', data: booking_detail.error}, status: :unprocessable_entity
+          render json: {status: '0', msg: 'Booking detail not Deleted', data: booking_detail.error}, status: :ok
         end
       end
 
@@ -64,21 +64,21 @@ module Api
                 if booking_detail.update(booking_details_params)
                   render json: {status: '1', msg: 'Booking details Updated', data: booking_detail}, status: :ok
                 else
-                  render json: {status: '0', msg: 'Booking detail not Updated', data: booking_detail.error}, status: :unprocessable_entity
+                  render json: {status: '0', msg: 'Booking detail not Updated', data: booking_detail.error}, status: :ok
                 end
               else
-                render json: {status: '0', msg: 'booking receipt not saved',}, status: :unprocessable_entity  
+                render json: {status: '0', msg: 'booking receipt not saved',}, status: :ok  
               end
             end
           else
-            render json: {status: '0', msg: 'booking receipt not saved because receipt already exists', data: {'error':'File Already Exists'}}, status: :unprocessable_entity  
+            render json: {status: '0', msg: 'booking receipt not saved because receipt already exists', data: {'error':'File Already Exists'}}, status: :ok  
           end
         else
           booking_detail = BookingDetail.find(params[:id]);
           if booking_detail.update(booking_details_params)
             render json: {status: '1', msg: 'Booking details Updated', data: booking_detail}, status: :ok
           else
-            render json: {status: '0', msg: 'Booking detail not Updated', data: booking_detail.error}, status: :unprocessable_entity
+            render json: {status: '0', msg: 'Booking detail not Updated', data: booking_detail.error}, status: :ok
           end
         end
       end

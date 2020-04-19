@@ -10,29 +10,33 @@ module Api
               login = User.where("email=? AND password=? AND is_active=true",params[:email],params[:password]).joins("INNER JOIN agent_details b on users.id = b.user_id").select("*")
               render json: {status: '1', msg: 'saved user and agent details',data: login[0]}, status: :ok
             else
-              render json: {status: '0', msg: 'agent details not saved', data: login.errors}, status: :unprocessable_entity
+              render json: {status: '0', msg: 'agent details not saved', data: login.errors}, status: :ok
             end
           else
             render json: {status: '1', msg: 'Saved User',data: user}, status: :ok
           end
         else
-          render json: {status: '0', msg: 'User not saved', data: user.errors}, status: :unprocessable_entity  
+          render json: {status: '0', msg: 'User not saved', data: user.errors}, status: :ok  
         end
       end
 
       def userLogin
         login = User.where("email=? AND password=? AND is_active=true",params[:email],params[:password])
+        p login.length
         if login.length>0
-          if(login[0].user_type!="ADMIN")
+          if login[0].user_type!="ADMIN"
             login = User.where("email=? AND password=? AND is_active=true",params[:email],params[:password]).joins("INNER JOIN agent_details b on users.id = b.user_id").select("*")
           end
           render json: {status: '1', msg: 'Login Successful', data:login}, status: :ok
         else
+          p "userLogin"
           email = User.where("email=?",params[:email])
+          p email.length
           if email.length>0
-            render json: {status: '0', msg: 'Incorrect Password'}, status: :unprocessable_entity  
+            render json: {status: '0', msg: 'Incorrect Password'}, status: :ok  
           else
-            render json: {status: '0', msg: 'Email not found'}, status: :unprocessable_entity  
+            p "ghusa"
+            render json: {status: '0', msg: 'Email not found'}, status: :ok  
           end
         end
       end
@@ -42,7 +46,7 @@ module Api
         if user.update_attributes(params.permit(:is_active))
           render json: {status: '1', msg: 'user deleted', data: user}, status: :ok
         else
-          render json: {status: '0', msg: 'user not deleted', data: user.errors}, status: :unprocessable_entity  
+          render json: {status: '0', msg: 'user not deleted', data: user.errors}, status: :ok  
         end
       end
 
@@ -59,12 +63,12 @@ module Api
             agent = AgentDetail.where("user_id=?",params[:id]).joins("INNER JOIN users b on agent_details.user_id = b.id").select("*")
             render json: {status: '1', msg: 'user updated', data: agent[0]}, status: :ok
           else
-            render json: {status: '0', msg: 'user not updated', data: agent[0].errors}, status: :unprocessable_entity  
+            render json: {status: '0', msg: 'user not updated', data: agent[0].errors}, status: :ok  
           end
         elsif type=="ADMIN"
           render json: {status: '1', msg: 'user updated', data: user}, status: :ok
         else
-          render json: {status: '0', msg: 'user not updated', data: user.errors}, status: :unprocessable_entity  
+          render json: {status: '0', msg: 'user not updated', data: user.errors}, status: :ok  
         end
       end
 
@@ -78,7 +82,7 @@ module Api
         if(user.length>0)
           render json: {status: '1', msg: 'All Agent details Loaded', data: user}, status: :ok
         else
-          render json: {status: '0', msg: 'No active agent found', data: user}, status: :unprocessable_entity
+          render json: {status: '0', msg: 'No active agent found', data: user}, status: :ok
         end
       end
 

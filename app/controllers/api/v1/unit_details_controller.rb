@@ -17,7 +17,7 @@ module Api
         if unit_details.save
           render json: {status: '1', msg: 'saved unit details',data:unit_details}, status: :ok
         else
-          render json: {status: '0', msg: 'Unit details not saved',data:unit_details.error}, status: :unprocessable_entity
+          render json: {status: '0', msg: 'Unit details not saved',data:unit_details.error}, status: :ok
         end
       end
 
