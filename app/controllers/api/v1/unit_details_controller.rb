@@ -45,6 +45,7 @@ module Api
           name["created_at"] = Time.now
           name["updated_at"] = Time.now
         end
+        p names
         u = UnitDetail.insert_all(names)
         render json: {status: '0', msg: 'unit details updated',data:u.error}, status: :ok
       end
