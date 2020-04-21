@@ -40,15 +40,13 @@ module Api
       end
 
       def multiInsert
-        puts UnitDetail.count
         names = params[:Values]
         names.each do |name|
           name["created_at"] = Time.now
           name["updated_at"] = Time.now
         end
-        p names[0]
-        p names.length
-        UnitDetail.insert_all(names)
+        u = UnitDetail.insert_all(names)
+        render json: {status: '0', msg: 'unit details updated',data:u.error}, status: :ok
       end
 
       private
