@@ -39,6 +39,18 @@ module Api
         end
       end
 
+      def multiInsert
+        puts UnitDetail.count
+        names = params[:Values]
+        names.each do |name|
+          name["created_at"] = Time.now
+          name["updated_at"] = Time.now
+        end
+        p names[0]
+        p names.length
+        UnitDetail.insert_all(names)
+      end
+
       private
       def unit_detail_params
         params.permit(
@@ -47,10 +59,11 @@ module Api
           :unit_number,
           :unit_floor,
           :unit_price,
-          :unit_height,
-          :unit_width,
+          :unit_area,
           :unit_type,
-          :unit_view
+          :unit_view,
+          :unit_furnishing,
+          :unit_availability
         )
       end
 

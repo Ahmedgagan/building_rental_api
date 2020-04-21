@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_16_163634) do
+ActiveRecord::Schema.define(version: 2020_04_21_212936) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -62,12 +62,13 @@ ActiveRecord::Schema.define(version: 2020_04_16_163634) do
     t.string "unit_number"
     t.integer "unit_floor"
     t.string "unit_price"
-    t.integer "unit_height"
-    t.integer "unit_width"
     t.string "unit_type"
     t.string "unit_view"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "unit_area"
+    t.string "unit_furnishing"
+    t.string "unit_availability"
   end
 
   create_table "users", force: :cascade do |t|

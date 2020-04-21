@@ -11,6 +11,7 @@ Rails.application.routes.draw do
       put '/user' => 'login#updateUser'
       get '/user' => 'login#getUsers'
       get '/agents' => 'login#getAgents'
+      post '/multiInsert' => 'unit_details#multiInsert'
     end
   end
 end
