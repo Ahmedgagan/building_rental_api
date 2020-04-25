@@ -19,22 +19,28 @@ module Api
         path = File.expand_path("../../../../assets/",__FILE__)
         Dir.mkdir(path+'/'+params[:booked_by_user_id]) unless Dir.exist?(path+'/'+params[:booked_by_user_id])
         path = path+"/"+params[:booked_by_user_id]+"/"+name
-        unless File.exist?(path)
-          File.open(path, "wb") do |f|
-            f.write(File.read(file))
-            if File.exist?(path)
-              booking_detail = BookingDetail.new(booking_details_params)
-              if booking_detail.save
-                render json: {status: '1', msg: 'saved booking details',data:booking_detail}, status: :ok
+        unit_details = UnitDetail.find(params[:unit_id])
+        unless unit_details.is_booked
+          unless File.exist?(path)
+            File.open(path, "wb") do |f|
+              f.write(File.read(file))
+              if File.exist?(path)
+                booking_detail = BookingDetail.new(booking_details_params)
+                unit_details.update(:is_booked=>true)
+                if booking_detail.save
+                  render json: {status: '1', msg: 'saved booking details',data:booking_detail}, status: :ok
+                else
+                  render json: {status: '0', msg: 'Booking details not saved',data:booking_detail.error}, status: :ok
+                end
               else
-                render json: {status: '0', msg: 'Booking details not saved',data:booking_detail.error}, status: :ok
+                render json: {status: '0', msg: 'booking receipt not saved',}, status: :ok  
               end
-            else
-              render json: {status: '0', msg: 'booking receipt not saved',}, status: :ok  
             end
+          else
+            render json: {status: '0', msg: 'booking receipt not saved because receipt already exists', data: {'error':'File Already Exists'}}, status: :ok  
           end
         else
-          render json: {status: '0', msg: 'booking receipt not saved because receipt already exists', data: {'error':'File Already Exists'}}, status: :ok  
+          render json: {status: '0', msg: 'this unit is already booked', data: {'error':'unit Already booked'}}, status: :ok  
         end
       end
 

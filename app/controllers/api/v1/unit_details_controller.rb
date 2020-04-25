@@ -3,7 +3,7 @@ module Api
     class UnitDetailsController < ApplicationController
 
       def index
-        unit_detail = UnitDetail.order('created_at DESC');
+        unit_detail = UnitDetail.order('unit_number');
         render json: {status: '1', msg: 'All unit details Loaded', data: unit_detail}, status: :ok
       end
 
@@ -47,7 +47,6 @@ module Api
         end
         p names
         u = UnitDetail.insert_all(names)
-        render json: {status: '0', msg: 'unit details updated',data:u.error}, status: :ok
       end
 
       private

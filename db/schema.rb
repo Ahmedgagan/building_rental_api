@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_21_212936) do
+ActiveRecord::Schema.define(version: 2020_04_25_033447) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -60,7 +60,7 @@ ActiveRecord::Schema.define(version: 2020_04_21_212936) do
     t.string "unit_block"
     t.string "unit_block_name"
     t.string "unit_number"
-    t.integer "unit_floor"
+    t.string "unit_floor"
     t.string "unit_price"
     t.string "unit_type"
     t.string "unit_view"
@@ -69,6 +69,7 @@ ActiveRecord::Schema.define(version: 2020_04_21_212936) do
     t.integer "unit_area"
     t.string "unit_furnishing"
     t.string "unit_availability"
+    t.boolean "is_booked"
   end
 
   create_table "users", force: :cascade do |t|
