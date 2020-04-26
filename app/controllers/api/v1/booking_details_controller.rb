@@ -20,7 +20,7 @@ module Api
         Dir.mkdir(path+'/'+params[:booked_by_user_id]) unless Dir.exist?(path+'/'+params[:booked_by_user_id])
         path = path+"/"+params[:booked_by_user_id]+"/"+name
         unit_details = UnitDetail.find(params[:unit_id])
-        unless unit_details.is_booked
+        unless unit_details.is_booked && unit_details.unit_availability=='Available'
           unless File.exist?(path)
             File.open(path, "wb") do |f|
               f.write(File.read(file))
@@ -87,6 +87,18 @@ module Api
             render json: {status: '0', msg: 'Booking detail not Updated', data: booking_detail.error}, status: :ok
           end
         end
+      end
+
+      def image
+        p params[:name]
+        p File.expand_path("../../../../assets/"+params[:id]+"/"+params[:name],__FILE__)
+        path = File.expand_path("../../../../assets/"+params[:id]+"/"+params[:name],__FILE__)
+        send_file path, disposition: 'download'
+      end
+
+      def bookings
+        bookings = BookingDetail.where("booked_by_user_id=? AND booking_details.is_active=true AND booking_details."+'"SPA_signed"'+"=true AND booking_details.booking_confirmation=true",params[:id]).joins("INNER JOIN unit_details b on booking_details.unit_id=b.id").select('booking_details.id as booking_id ,*')
+        render json: {status: '1', msg: 'Booking details of Agent', data: bookings}, status: :ok
       end
 
       private
