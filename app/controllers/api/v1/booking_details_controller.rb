@@ -115,7 +115,9 @@ module Api
           :booking_confirmation,
           :is_active,
           :unit_id,
-          :remark
+          :remark,
+          :handover,
+          :disbursement
         );
       end
     end
