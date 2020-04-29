@@ -3,7 +3,7 @@ module Api
     class BookingDetailsController < ApplicationController
 
       def index
-        boking_details = BookingDetail.order('created_at DESC').where("is_active=true AND "+'"SPA_signed"'+"=true AND booking_confirmation=true");
+        boking_details = BookingDetail.joins("INNER JOIN unit_details b on booking_details.unit_id=b.id").select('booking_details.id as booking_id ,*').where('is_booked=true')
         render json: {status: '1', msg: 'All booking details Loaded', data: boking_details}, status: :ok
       end
 
