@@ -8,8 +8,8 @@ module Api
       end
 
       def show
-        booking_details = BookingDetail.find(params[:id]);
-        render json: {status: '1', msg: 'Booking detail Loaded', data: booking_details}, status: :ok
+        booking_details = BookingDetail.joins("INNER JOIN unit_details b on booking_details.unit_id=b.id").select('booking_details.id as booking_id ,*').where('is_booked=true AND booking_details.id=?',params[:id]);
+        render json: {status: '1', msg: 'Booking detail Loaded', data: booking_details[0]}, status: :ok
       end
 
       def create
