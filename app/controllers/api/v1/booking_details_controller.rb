@@ -70,10 +70,11 @@ module Api
       def update
         booking_detail = BookingDetail.find(params[:id])
         if params[:payment_receipt]
+          p params[:payment_receipt]
           file = params[:payment_receipt]
           params[:payment_receipt]= file.original_filename
           name = file.original_filename
-          p name
+          p params[:payment_receipt]
           path = File.expand_path("../../../../assets/",__FILE__)
           File.delete(path+booking_detail.booked_by_user_id+"/"+booking_detail.payment_receipt) if File.exist?(path_to_file)
           Dir.mkdir(path+'/'+params[:booked_by_user_id]) unless Dir.exist?(path+'/'+params[:booked_by_user_id])
