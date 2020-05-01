@@ -18,6 +18,7 @@ module Api
         p params[:payment_receipt]
         path = File.expand_path("../../../../assets/",__FILE__)
         Dir.mkdir(path+'/'+params[:booked_by_user_id]) unless Dir.exist?(path+'/'+params[:booked_by_user_id])
+        p Dir[path]
         path = path+"/"+params[:booked_by_user_id]+"/"+name
         unit_details = UnitDetail.find(params[:unit_id])
         unless unit_details.is_booked && unit_details.unit_availability=='Available'
@@ -116,7 +117,7 @@ module Api
         p params[:id]
         path = File.expand_path("../../../../assets/",__FILE__)
         p path
-        p Dir["path"]
+        p Dir["app/assets"]
         # p File.expand_path("../../../../../app/assets/"+params[:id]+"/"+params[:name],__FILE__)
         # if params[:name] && params[:id]
         #   path = File.expand_path("../../../../../app/assets/"+params[:id]+"/"+params[:name],__FILE__)
