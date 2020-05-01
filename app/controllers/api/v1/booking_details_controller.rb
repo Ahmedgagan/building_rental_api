@@ -70,8 +70,8 @@ module Api
       def update
         booking_detail = BookingDetail.find(params[:id])
         if params[:payment_receipt]
-          p params[:payment_receipt]
           file = params[:payment_receipt]
+          p file.class
           params[:payment_receipt]= file.original_filename
           name = file.original_filename
           p params[:payment_receipt]
