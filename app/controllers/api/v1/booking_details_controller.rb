@@ -115,6 +115,7 @@ module Api
         p params[:name]
         p params[:id]
         path = File.expand_path("../../../../assets/",__FILE__)
+        p path
         p Dir["path"]
         # p File.expand_path("../../../../../app/assets/"+params[:id]+"/"+params[:name],__FILE__)
         # if params[:name] && params[:id]
