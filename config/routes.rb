@@ -15,6 +15,7 @@ Rails.application.routes.draw do
       post '/multiInsert' => 'unit_details#multiInsert'
       get '/image' => 'booking_details#image'
       get '/bookings' => 'booking_details#bookings'
+      get '/reciepts' => 'booking_details#getAllFiles'
     end
   end
 end

@@ -132,6 +132,11 @@ module Api
         render json: {status: '1', msg: 'Booking details of Agent', data: bookings}, status: :ok
       end
 
+      def getAllFiles
+        a = Dir["app/assets/"+params[:id].to_s+"/*"]
+        render json: {status: '1', msg: 'Booking details of Agent', data:a}, status: :ok
+      end
+
       private
 
       def booking_details_params
