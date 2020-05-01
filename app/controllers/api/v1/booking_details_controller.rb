@@ -114,7 +114,8 @@ module Api
         p "ghusa";
         p params[:name]
         p params[:id]
-        p Dir["app/assets/12/*"]
+        path = File.expand_path("../../../../assets/",__FILE__)
+        p Dir["path"]
         # p File.expand_path("../../../../../app/assets/"+params[:id]+"/"+params[:name],__FILE__)
         # if params[:name] && params[:id]
         #   path = File.expand_path("../../../../../app/assets/"+params[:id]+"/"+params[:name],__FILE__)
