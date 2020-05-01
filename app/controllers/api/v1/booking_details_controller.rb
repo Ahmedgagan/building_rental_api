@@ -112,19 +112,16 @@ module Api
       end
 
       def image
-        p "ghusa";
-        p params[:name]
-        p params[:id]
-        path = File.expand_path("../../../../assets/*",__FILE__)
-        p path
-        p Dir["app/assets/5/*"]
-        # p File.expand_path("../../../../../app/assets/"+params[:id]+"/"+params[:name],__FILE__)
-        # if params[:name] && params[:id]
-        #   path = File.expand_path("../../../../../app/assets/"+params[:id]+"/"+params[:name],__FILE__)
-        #   send_file path, disposition: 'download'
-        # else
-        #   render json: {status: '0', msg: 'Required parameters not found'}, status: :ok
-        # end
+        if params[:name] && params[:id]
+          path = "app/assets/"+params[:id]+"/"+params[:name]
+          if File.exist?(path)
+            send_file path, disposition: 'download'
+          else
+            render json: {status: '0', msg: 'File not found'}, status: :ok
+          end
+        else
+          render json: {status: '0', msg: 'Required parameters not found'}, status: :ok
+        end
       end
 
       def bookings
