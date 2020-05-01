@@ -29,6 +29,7 @@ module Api
                 booking_detail = BookingDetail.new(booking_details_params)
                 unit_details.update(:is_booked=>true)
                 if booking_detail.save
+                  user = user.find(booking_detail[:booked_by_user_id])
                   action = "New booking of unit: "+unit_details[:unit_type]+" done by "+user[:name]
                   log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"New Booking")
                   log.save
