@@ -76,7 +76,7 @@ module Api
           name = file.original_filename
           p params[:payment_receipt]
           path = File.expand_path("../../../../assets/",__FILE__)
-          File.delete(path+booking_detail.booked_by_user_id+"/"+booking_detail.payment_receipt) if File.exist?(path_to_file)
+          File.delete(path+booking_detail.booked_by_user_id+"/"+booking_detail.payment_receipt) if File.exist?(path+booking_detail.booked_by_user_id+"/"+booking_detail.payment_receipt)
           Dir.mkdir(path+'/'+params[:booked_by_user_id]) unless Dir.exist?(path+'/'+params[:booked_by_user_id])
           path = path+"/"+params[:booked_by_user_id]+"/"+name
           unless File.exist?(path)
