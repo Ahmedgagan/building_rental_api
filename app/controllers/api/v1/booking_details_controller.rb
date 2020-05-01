@@ -3,12 +3,12 @@ module Api
     class BookingDetailsController < ApplicationController
 
       def index
-        boking_details = BookingDetail.joins("INNER JOIN unit_details b on booking_details.unit_id=b.id").select('booking_details.id as booking_id ,*').where('is_booked=true')
+        boking_details = BookingDetail.joins("INNER JOIN unit_details b on booking_details.unit_id=b.id").select('booking_details.id as booking_id ,*').where('is_booked=true and is_active=true')
         render json: {status: '1', msg: 'All booking details Loaded', data: boking_details}, status: :ok
       end
 
       def show
-        booking_details = BookingDetail.joins("INNER JOIN unit_details b on booking_details.unit_id=b.id").select('booking_details.id as booking_id ,*').where('is_booked=true AND booking_details.id=?',params[:id]);
+        booking_details = BookingDetail.joins("INNER JOIN unit_details b on booking_details.unit_id=b.id").select('booking_details.id as booking_id ,*').where('is_booked=true AND is_active=true AND booking_details.id=?',params[:id])
         render json: {status: '1', msg: 'Booking detail Loaded', data: booking_details[0]}, status: :ok
       end
 
@@ -28,6 +28,9 @@ module Api
                 booking_detail = BookingDetail.new(booking_details_params)
                 unit_details.update(:is_booked=>true)
                 if booking_detail.save
+                  action = "New booking of unit: "+unit_details[:unit_type]+" done by "+user[:name]
+                  log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"New Booking")
+                  log.save
                   render json: {status: '1', msg: 'saved booking details',data:booking_detail}, status: :ok
                 else
                   render json: {status: '0', msg: 'Booking details not saved',data:booking_detail.error}, status: :ok
@@ -45,16 +48,25 @@ module Api
       end
 
       def destroy
-        booking_detail = BookingDetail.find(params[:id]);
-        if booking_detail.update(booking_details_params)
-          render json: {status: '1', msg: 'Booking details Deleted', data: booking_detail}, status: :ok
+        booking_detail = BookingDetail.find(params[:id])
+        if booking_detail.update(:is_active=>false, :remark=>params[:remark])
+          unit_details = UnitDetail.find(booking_detail[:unit_id])
+          if unit_details.update(:is_booked=>false)
+            user = User.find(params[:admin_user_id])
+            action = "Booking of unit: "+unit_details[:unit_type]+" canceled by "+user[:name]
+            log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :admin_user_id=>params[:admin_user_id],:remark=>"Booking Deleted")
+            log.save
+            render json: {status: '1', msg: 'Booking details Deleted', data: booking_detail}, status: :ok
+          else
+            render json: {status: '0', msg: 'Booking details Deleted but unit details is_active not set', data: unit_details.error}, status: :ok
+          end
         else
           render json: {status: '0', msg: 'Booking detail not Deleted', data: booking_detail.error}, status: :ok
         end
       end
 
       def update
-        booking_detail = BookingDetail.find(params[:id]);
+        booking_detail = BookingDetail.find(params[:id])
         if params[:payment_receipt]
           file = params[:payment_receipt]
           params[:payment_receipt]= name = file.original_filename
@@ -68,6 +80,15 @@ module Api
               f.write(File.read(file))
               if File.exist?(path)
                 if booking_detail.update(booking_details_params)
+                  # if booking_detail[:booking_confirmation] != 
+                  # booking_confirmation = params[:booking_confirmation] if params[:booking_confirmation]
+                  # handover = params[:handover]
+                  # disbursement = params[:disbursement]
+                  # _SPA_signed = params[:SPA_signed]
+                  #   action = "New booking of unit: "+unit_details[:unit_type]+" done by "+user[:name]
+                  #   log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"New Booking")
+                  #   log.save
+                  # end
                   render json: {status: '1', msg: 'Booking details Updated', data: booking_detail}, status: :ok
                 else
                   render json: {status: '0', msg: 'Booking detail not Updated', data: booking_detail.error}, status: :ok
@@ -80,7 +101,7 @@ module Api
             render json: {status: '0', msg: 'booking receipt not saved because receipt already exists', data: {'error':'File Already Exists'}}, status: :ok  
           end
         else
-          booking_detail = BookingDetail.find(params[:id]);
+          booking_detail = BookingDetail.find(params[:id])
           if booking_detail.update(booking_details_params)
             render json: {status: '1', msg: 'Booking details Updated', data: booking_detail}, status: :ok
           else
@@ -90,10 +111,16 @@ module Api
       end
 
       def image
+        p "ghusa";
         p params[:name]
-        p File.expand_path("../../../../assets/"+params[:id]+"/"+params[:name],__FILE__)
-        path = File.expand_path("../../../../assets/"+params[:id]+"/"+params[:name],__FILE__)
-        send_file path, disposition: 'download'
+        p params[:id]
+        p File.expand_path("../../../assets/"+params[:id]+"/"+params[:name],__FILE__)
+        if params[:name] && params[:id]
+          path = File.expand_path("../../../assets/"+params[:id]+"/"+params[:name],__FILE__)
+          send_file path, disposition: 'download'
+        else
+          render json: {status: '0', msg: 'Required parameters not found'}, status: :ok
+        end
       end
 
       def bookings
@@ -118,7 +145,7 @@ module Api
           :remark,
           :handover,
           :disbursement
-        );
+        )
       end
     end
   end

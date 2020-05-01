@@ -5,6 +5,7 @@ Rails.application.routes.draw do
       load File.expand_path('../../app/controllers/api/v1/login_controller.rb', __FILE__)
       resources :unit_details
       resources :booking_details
+      resources :logs
       post '/signup' => 'login#signup'
       post '/login' => 'login#userLogin'
       delete '/user' => 'login#removeUser'
