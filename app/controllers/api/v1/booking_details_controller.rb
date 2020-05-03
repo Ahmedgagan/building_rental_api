@@ -86,6 +86,7 @@ module Api
                 if booking_detail.update(booking_details_params)
                   unit_details = UnitDetail.find(booking_detail[:unit_id])
                   user = User.find(booking_detail[:booked_by_user_id])
+                  p params
                   if params[:booking_confirmation]
                     p "ghusa"
                     action = nil
