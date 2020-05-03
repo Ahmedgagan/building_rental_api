@@ -30,7 +30,7 @@ module Api
           render json: {status: '1', msg: 'Login Successful', data:login}, status: :ok
         else
           p "userLogin"
-          email = User.where("email=? AND user_type=",params[:email], params[:user_type])
+          email = User.where("email=? AND user_type=?",params[:email], params[:user_type])
           p email.length
           if email.length>0
             render json: {status: '0', msg: 'Incorrect Password'}, status: :ok  
