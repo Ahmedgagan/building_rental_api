@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       put '/user' => 'login#updateUser'
       get '/user' => 'login#getUsers'
       get '/agents' => 'login#getAgents'
+      get '/singleUser' => 'login#getSingleUser'
       post '/multiInsert' => 'unit_details#multiInsert'
       get '/image' => 'booking_details#image'
       get '/bookings' => 'booking_details#bookings'

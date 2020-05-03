@@ -77,6 +77,16 @@ module Api
         render json: {status: '1', msg: 'All user details Loaded', data: user}, status: :ok
       end
 
+      def getSingleUser
+        user = User.where("id=?",params[:id])
+        if user.length>0
+          if user[0][:user_type] == 'AGENT'
+            user = AgentDetail.where("user_id=?",params[:id]).joins("INNER JOIN users b on agent_details.user_id = b.id").select("*")
+          end
+        end
+        render json: {status: '1', msg: 'User details Loaded', data: user[0]}, status: :ok
+      end
+
       def getAgents
         user = User.joins("INNER JOIN agent_details b on users.id = b.user_id").select("*").where("users.user_type = 'AGENT' AND users.is_active=true AND b."+'"SPA_signed"'+"=true");
         if(user.length>0)
