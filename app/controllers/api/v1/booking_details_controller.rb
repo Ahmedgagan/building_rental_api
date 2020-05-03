@@ -8,7 +8,7 @@ module Api
       end
 
       def show
-        booking_details = BookingDetail.joins("INNER JOIN unit_details b on booking_details.unit_id=b.id").select('booking_details.id as booking_id ,*').where('is_booked=true AND is_active=true AND booking_details.id=?',params[:id])
+        booking_details = BookingDetail.joins("INNER JOIN unit_details b on booking_details.unit_id=b.id").select('booking_details.id as booking_id ,*').where('booking_details.id=?',params[:id])
         render json: {status: '1', msg: 'Booking detail Loaded', data: booking_details[0]}, status: :ok
       end
 
@@ -56,7 +56,7 @@ module Api
           if unit_details.update(:is_booked=>false)
             user = User.find(params[:admin_user_id])
             action = "Booking of unit: "+unit_details[:unit_type]+" canceled by "+user[:name]
-            log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :admin_user_id=>params[:admin_user_id],:remark=>"Booking Deleted")
+            log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :admin_user_id=>params[:admin_user_id],:remark=>params[:remark])
             log.save
             render json: {status: '1', msg: 'Booking details Deleted', data: booking_detail}, status: :ok
           else
@@ -84,15 +84,48 @@ module Api
               f.write(File.read(file))
               if File.exist?(path)
                 if booking_detail.update(booking_details_params)
-                  # if booking_detail[:booking_confirmation] != 
-                  # booking_confirmation = params[:booking_confirmation] if params[:booking_confirmation]
-                  # handover = params[:handover]
-                  # disbursement = params[:disbursement]
-                  # _SPA_signed = params[:SPA_signed]
-                  #   action = "New booking of unit: "+unit_details[:unit_type]+" done by "+user[:name]
-                  #   log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"New Booking")
-                  #   log.save
-                  # end
+                  unit_details = UnitDetail.find(booking_detail[:unit_id])
+                  user = User.find(booking_detail[:booked_by_user_id])
+                  if params[:booking_confirmation]
+                    action = nil
+                    if params[:booking_confirmation] == true
+                      action = "Booking confirmed of "+unit_details[:unit_type]+" by "+booking_detail[:booked_by_user_id]
+                    else
+                      action = "Booking cancelled of "+unit_details[:unit_type]+" by "+user[:name]
+                    end
+                    log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"Booking Confirmation Updated")
+                    log.save
+                  end
+                  if params[:SPA_signed]
+                    action = nil
+                    if params[:SPA_signed] == true
+                      action = "SPA signed of "+unit_details[:unit_type]+" by "+booking_detail[:booked_by_user_id]
+                    else
+                      action = "SPA Unsigned of "+unit_details[:unit_type]+" by "+user[:name]
+                    end
+                    log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"SPA Signed Updated")
+                    log.save
+                  end
+                  if params[:disbursement]
+                    action = nil
+                    if params[:disbursement] == true
+                      action = "disbursment done of "+unit_details[:unit_type]+" by "+booking_detail[:booked_by_user_id]
+                    else
+                      action = "disbursment not done of "+unit_details[:unit_type]+" by "+user[:name]
+                    end
+                    log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"Disbursment details Updated")
+                    log.save
+                  end
+                  if params[:handover]
+                    action = nil
+                    if params[:handover] == true
+                      action = "handover done of "+unit_details[:unit_type]+" by "+booking_detail[:booked_by_user_id]
+                    else
+                      action = "handover not done of "+unit_details[:unit_type]+" by "+user[:name]
+                    end
+                    log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"Handover details Updated")
+                    log.save
+                  end
                   render json: {status: '1', msg: 'Booking details Updated', data: booking_detail}, status: :ok
                 else
                   render json: {status: '0', msg: 'Booking detail not Updated', data: booking_detail.error}, status: :ok
@@ -128,7 +161,7 @@ module Api
       end
 
       def bookings
-        bookings = BookingDetail.where("booked_by_user_id=? AND booking_details.is_active=true AND booking_details."+'"SPA_signed"'+"=true AND booking_details.booking_confirmation=true",params[:id]).joins("INNER JOIN unit_details b on booking_details.unit_id=b.id").select('booking_details.id as booking_id ,*')
+        bookings = BookingDetail.where("booked_by_user_id=?",params[:id]).joins("INNER JOIN unit_details b on booking_details.unit_id=b.id").select('booking_details.id as booking_id ,*')
         render json: {status: '1', msg: 'Booking details of Agent', data: bookings}, status: :ok
       end
 
