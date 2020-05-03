@@ -21,7 +21,7 @@ module Api
       end
 
       def userLogin
-        login = User.where("email=? AND password=? AND is_active=true",params[:email],params[:password])
+        login = User.where("email=? AND password=? AND user_type=? AND is_active=true",params[:email],params[:password], params[:user_type])
         p login.length
         if login.length>0
           if login[0].user_type!="ADMIN"
@@ -30,7 +30,7 @@ module Api
           render json: {status: '1', msg: 'Login Successful', data:login}, status: :ok
         else
           p "userLogin"
-          email = User.where("email=?",params[:email])
+          email = User.where("email=? AND user_type=",params[:email], params[:user_type])
           p email.length
           if email.length>0
             render json: {status: '0', msg: 'Incorrect Password'}, status: :ok  
