@@ -106,7 +106,8 @@ module Api
           :user_type,
           :contact,
           :email,
-          :is_active
+          :is_active,
+          :token
         )
       end
       def agent_params
