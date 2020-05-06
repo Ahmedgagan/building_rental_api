@@ -33,6 +33,11 @@ module Api
                   action = "New booking of unit: "+unit_details[:unit_type]+" done by "+user[:name]
                   log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"New Booking")
                   log.save
+                  ## send notification
+                  reg_id = User.where("id!=?",user[:id]).select('token')
+                  registration_id = []
+                  reg_id.each{ |x| registration_id.push x[:token]}
+                  fcm_push_notification(action, registration_id, 'Booking Canceled')
                   render json: {status: '1', msg: 'saved booking details',data:booking_detail}, status: :ok
                 else
                   render json: {status: '0', msg: 'Booking details not saved',data:booking_detail.error}, status: :ok
@@ -58,6 +63,11 @@ module Api
             action = "Booking of unit: "+unit_details[:unit_type]+" canceled by "+user[:name]
             log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :admin_user_id=>params[:admin_user_id],:remark=>params[:remark])
             log.save
+            ## send notification
+            reg_id = User.where("id!=?",user[:id]).select('token')
+            registration_id = []
+            reg_id.each{ |x| registration_id.push x[:token]}
+            fcm_push_notification(action, registration_id, 'Booking Canceled')
             render json: {status: '1', msg: 'Booking details Deleted', data: booking_detail}, status: :ok
           else
             render json: {status: '0', msg: 'Booking details Deleted but unit details is_active not set', data: unit_details.error}, status: :ok
@@ -97,6 +107,11 @@ module Api
                     end
                     log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"Booking Confirmation Updated", :admin_user_id=>params[:admin_user_id])
                     log.save
+                    ## send notification
+                    reg_id = User.where("id!=?",user[:id]).select('token')
+                    registration_id = []
+                    reg_id.each{ |x| registration_id.push x[:token]}
+                    fcm_push_notification(action, registration_id, 'Booking Confirmation Updated')
                   end
                   if params[:SPA_signed] != nil
                     p "ghusa spa"
@@ -108,6 +123,11 @@ module Api
                     end
                     log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"SPA Signed Updated", :admin_user_id=>params[:admin_user_id])
                     log.save
+                    ## send notification
+                    reg_id = User.where("id!=?",user[:id]).select('token')
+                    registration_id = []
+                    reg_id.each{ |x| registration_id.push x[:token]}
+                    fcm_push_notification(action, registration_id, 'SPA Signed Updated')
                   end
                   if params[:disbursement] != nil
                     p "ghusa dis"
@@ -119,6 +139,11 @@ module Api
                     end
                     log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"Disbursment details Updated", :admin_user_id=>params[:admin_user_id])
                     log.save
+                    ## send notification
+                    reg_id = User.where("id!=?",user[:id]).select('token')
+                    registration_id = []
+                    reg_id.each{ |x| registration_id.push x[:token]}
+                    fcm_push_notification(action, registration_id, 'Disbursement details Updated')
                   end
                   if params[:handover] != nil
                     p "ghusa hand"
@@ -130,6 +155,11 @@ module Api
                     end
                     log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"Handover details Updated", :admin_user_id=>params[:admin_user_id])
                     log.save
+                    ## send notification
+                    reg_id = User.where("id!=?",user[:id]).select('token')
+                    registration_id = []
+                    reg_id.each{ |x| registration_id.push x[:token]}
+                    fcm_push_notification(action, registration_id, 'Handover Details Updated')
                   end
                   render json: {status: '1', msg: 'Booking details Updated', data: booking_detail}, status: :ok
                 else
@@ -158,6 +188,11 @@ module Api
               end
               log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"Booking Confirmation Updated", :admin_user_id=>params[:admin_user_id])
               log.save
+              ## send notification
+              reg_id = User.where("id!=?",user[:id]).select('token')
+              registration_id = []
+              reg_id.each{ |x| registration_id.push x[:token]}
+              fcm_push_notification(action, registration_id, 'Booking Confirmation Updated')
             end
             if params[:SPA_signed] != nil
               p "ghusa spa"
@@ -169,6 +204,11 @@ module Api
               end
               log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"SPA Signed Updated", :admin_user_id=>params[:admin_user_id])
               log.save
+              ## send notification
+              reg_id = User.where("id!=?",user[:id]).select('token')
+              registration_id = []
+              reg_id.each{ |x| registration_id.push x[:token]}
+              fcm_push_notification(action, registration_id, 'SPA Details Updated')
             end
             if params[:disbursement] != nil
               p "ghusa dis"
@@ -180,6 +220,11 @@ module Api
               end
               log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"Disbursment details Updated", :admin_user_id=>params[:admin_user_id])
               log.save
+              ## send notification
+              reg_id = User.where("id!=?",user[:id]).select('token')
+              registration_id = []
+              reg_id.each{ |x| registration_id.push x[:token]}
+              fcm_push_notification(action, registration_id, 'Disbursement details Updated')
             end
             if params[:handover] != nil
               p "ghusa hand"
@@ -191,6 +236,11 @@ module Api
               end
               log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"Handover details Updated", :admin_user_id=>params[:admin_user_id])
               log.save
+              ## send notification
+              reg_id = User.where("id!=?",user[:id]).select('token')
+              registration_id = []
+              reg_id.each{ |x| registration_id.push x[:token]}
+              fcm_push_notification(action, registration_id, 'Handover details Updated')
             end
             render json: {status: '1', msg: 'Booking details Updated', data: booking_detail}, status: :ok
           else
@@ -223,6 +273,25 @@ module Api
       end
 
       private
+
+      def fcm_push_notification(message, registration_ids, title)
+        fcm_client = FCM.new('AAAAWaIbzRY:APA91bEiB_2uHtHGkBN-NVrZnkhDvbvdmkcPYKywv8-dqOUMc1Z25zI9tHtEIYykGMC3PElYjdYEFTcVE7A_QbFIoMiwZIfDGLAyPG4JxTXbrMtFiHhBcntHKNpy2QrZrBJdCb8cTRJf') # set your FCM_SERVER_KEY
+        options = { 
+                    priority: 'high',
+                    data: { click_action: 'FLUTTER_NOTIFICATION_CLICK'},
+                    notification: { body: message,
+                                    title: title,
+                                    sound: 'default'
+                                  }
+                  }
+        #([Array of registration ids up to 1000])
+        # Registration ID looks something like: "dAlDYuaPXes:APA91bFEipxfcckxglzRo8N1SmQHqC6g8SWFATWBN9orkwgvTM57kmlFOUYZAmZKb4XGGOOL9wqeYsZHvG7GEgAopVfVupk_gQ2X5Q4Dmf0Cn77nAT6AEJ5jiAQJgJ_LTpC1s64wYBvC"
+        registration_ids.each_slice(20) do |registration_id|
+          response = fcm_client.send(registration_id, options)
+          puts response
+        end
+      end
+
 
       def booking_details_params
         params.permit(
