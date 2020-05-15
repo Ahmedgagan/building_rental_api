@@ -3,13 +3,6 @@ module Api
     class BookingDetailsController < ApplicationController
 
       def index
-        ## send notification
-        action = "hey tp"
-        reg_id = User.where("id!=4").select('token')
-        registration_id = []
-        reg_id.each{ |x| registration_id.push x[:token]}
-        fcm_push_notification(action, registration_id, 'Handover details Updated')
-
         boking_details = BookingDetail.joins("INNER JOIN unit_details b on booking_details.unit_id=b.id").select('booking_details.id as booking_id ,*').where('is_booked=true and is_active=true')
         render json: {status: '1', msg: 'All booking details Loaded', data: boking_details}, status: :ok
       end
