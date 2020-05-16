@@ -37,7 +37,7 @@ module Api
                   reg_id = User.where("id!=?",user[:id]).select('token')
                   registration_id = []
                   reg_id.each{ |x| registration_id.push x[:token]}
-                  fcm_push_notification(action, registration_id, 'Booking Canceled')
+                  fcm_push_notification(action, registration_id, 'New Booking')
                   render json: {status: '1', msg: 'saved booking details',data:booking_detail}, status: :ok
                 else
                   render json: {status: '0', msg: 'Booking details not saved',data:booking_detail.error}, status: :ok
