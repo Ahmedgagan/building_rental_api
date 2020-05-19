@@ -31,7 +31,7 @@ module Api
                 if booking_detail.save
                   user = User.find(booking_detail[:booked_by_user_id])
                   action = "New booking of unit: "+unit_details[:unit_type]+" done by "+user[:name]
-                  log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"New Booking")
+                  log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"New Booking", :admin_user_id=>nil)
                   log.save
                   ## send notification
                   reg_id = User.where("id!=?",user[:id]).select('token')
