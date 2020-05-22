@@ -1,3 +1,5 @@
+require 'fileutils'
+
 module Api
   module V1
     class BookingDetailsController < ApplicationController
@@ -287,9 +289,14 @@ module Api
       end
 
       def new_booking(params)
+        path = 'app/assets/'
+        Dir.mkdir(path) unless Dir.exist?(path)
+        Dir.mkdir(path+'/'+params[:booked_by_user_id].to_s) unless Dir.exist?(path+'/'+params[:booked_by_user_id].to_s)
+        path += params[:booked_by_user_id].to_s+'/'+name
+        
         file = params[:payment_receipt]
         params[:payment_receipt]= name = file.original_filename
-        path = 'app/assets/'+params[:booked_by_user_id].to_s+'/'+name
+        
         p "path"
         p path
         # path = getFilePath(params[:booked_by_user_id], name)
@@ -301,13 +308,13 @@ module Api
         if File.exist?(path)
           return "booking receipt not saved because receipt already exists", "0"
         end
-        path = 'app/assets/'+params[:booked_by_user_id].to_s
-        Dir.chdir(path) do |f|
+
+        File.open(path, "wb") do |f|
           name = f.write(File.read(file))
           p "name"
           p name
         end
-        path += name
+        
         unless File.exist?(path)
           return "booking receipt not saved", "0"
         end
