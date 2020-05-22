@@ -12,48 +12,58 @@ module Api
         render json: {status: '1', msg: 'Booking detail Loaded', data: booking_details[0]}, status: :ok
       end
 
-      def create
-        p "contact"
-        p params[:contact]
-        file = params[:payment_receipt]
-        params[:payment_receipt]= name = file.original_filename
-        p params[:payment_receipt]
+      def getFilePath (id, name)
         path = File.expand_path("../../../../assets/",__FILE__)
-        Dir.mkdir(path+'/'+params[:booked_by_user_id]) unless Dir.exist?(path+'/'+params[:booked_by_user_id])
-        p Dir[path]
-        path = path+"/"+params[:booked_by_user_id]+"/"+name
-        unit_details = UnitDetail.find(params[:unit_id])
-        unless unit_details.is_booked && unit_details.unit_availability=='Available'
-          unless File.exist?(path)
-            File.open(path, "wb") do |f|
-              f.write(File.read(file))
-              if File.exist?(path)
-                booking_detail = BookingDetail.new(booking_details_params)
-                unit_details.update(:is_booked=>true)
-                if booking_detail.save
-                  user = User.find(booking_detail[:booked_by_user_id])
-                  action = "New booking of unit: "+unit_details[:unit_type]+" done by "+user[:name]
-                  log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"New Booking", :admin_user_id=>params[:admin_user_id])
-                  log.save
-                  ## send notification
-                  reg_id = User.where("id!=?",user[:id]).select('token')
-                  registration_id = []
-                  reg_id.each{ |x| registration_id.push x[:token]}
-                  fcm_push_notification(action, registration_id, 'New Booking')
-                  render json: {status: '1', msg: 'saved booking details',data:booking_detail}, status: :ok
-                else
-                  render json: {status: '0', msg: 'Booking details not saved',data:booking_detail.error}, status: :ok
-                end
-              else
-                render json: {status: '0', msg: 'booking receipt not saved',}, status: :ok  
-              end
-            end
-          else
-            render json: {status: '0', msg: 'booking receipt not saved because receipt already exists', data: {'error':'File Already Exists'}}, status: :ok  
-          end
+        Dir.mkdir(path+id) unless Dir.exist?(path+id)
+        path = path+"/"+id+"/"+name
+      end
+
+      def create
+        booking_status = new_booking(params)
+        if booking_status[1] == '1'
+          render json: {status: booking_status[1], msg: booking_status[0], data:booking_status[2]}, status: :ok
         else
-          render json: {status: '0', msg: 'this unit is already booked', data: {'error':'unit Already booked'}}, status: :ok  
+          render json: {status: booking_status[1], msg: booking_status[0], data:{'error':booking_status[0]}}, status: :ok
         end
+        
+
+
+        
+
+
+
+
+        # unless unit_details.is_booked && unit_details.unit_availability=='Available'
+        #   unless File.exist?(path)
+        #     File.open(path, "wb") do |f|
+        #       f.write(File.read(file))
+        #       if File.exist?(path)
+        #         booking_detail = BookingDetail.new(booking_details_params)
+        #         unit_details.update(:is_booked=>true)
+        #         if booking_detail.save
+        #           user = User.find(booking_detail[:booked_by_user_id])
+        #           action = "New booking of unit: "+unit_details[:unit_type]+" done by "+user[:name]
+        #           log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"New Booking", :admin_user_id=>params[:admin_user_id])
+        #           log.save
+        #           ## send notification
+        #           reg_id = User.where("id!=?",user[:id]).select('token')
+        #           registration_id = []
+        #           reg_id.each{ |x| registration_id.push x[:token]}
+        #           fcm_push_notification(action, registration_id, 'New Booking')
+        #           render json: {status: '1', msg: 'saved booking details',data:booking_detail}, status: :ok
+        #         else
+        #           render json: {status: '0', msg: 'Booking details not saved',data:booking_detail.error}, status: :ok
+        #         end
+        #       else
+        #         render json: {status: '0', msg: 'booking receipt not saved',}, status: :ok  
+        #       end
+        #     end
+        #   else
+        #     render json: {status: '0', msg: 'booking receipt not saved because receipt already exists', data: {'error':'File Already Exists'}}, status: :ok  
+        #   end
+        # else
+        #   render json: {status: '0', msg: 'this unit is already booked', data: {'error':'unit Already booked'}}, status: :ok  
+        # end
       end
 
       def destroy
@@ -275,6 +285,46 @@ module Api
       end
 
       private
+
+      def new_booking(params)
+        file = params[:payment_receipt]
+        params[:payment_receipt]= name = file.original_filename
+        path = getFilePath(params[:booked_by_user_id], name)
+        unit_details = UnitDetail.find(params[:unit_id])
+        if unit_details.is_booked && unit_details.unit_availability=='Available'
+          return "this unit is already booked", "0"
+        end
+
+        if File.exist?(path)
+          return "booking receipt not saved because receipt already exists", "0"
+        end
+
+        File.open(path, "wb") do |f|
+          f.write(File.read(file))
+        end
+
+        unless File.exist?(path)
+          return "booking receipt not saved", "0"
+        end
+
+        booking_detail = BookingDetail.new(booking_details_params)
+        unit_details.update(:is_booked=>true)
+
+        unless booking_detail.save
+          return "Booking details not saved", "0"
+        end
+
+        user = User.find(booking_detail[:booked_by_user_id])
+        action = "New booking of unit: "+unit_details[:unit_type]+" done by "+user[:name]
+        log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"New Booking", :admin_user_id=>params[:admin_user_id])
+        log.save
+        ## send notification
+        reg_id = User.where("id!=?",user[:id]).select('token')
+        registration_id = []
+        reg_id.each{ |x| registration_id.push x[:token]}
+        fcm_push_notification(action, registration_id, 'New Booking')
+        return "saved booking details", "1", booking_detail
+      end
 
       def fcm_push_notification(message, registration_ids, title)
         fcm_client = FCM.new('AAAAWaIbzRY:APA91bEiB_2uHtHGkBN-NVrZnkhDvbvdmkcPYKywv8-dqOUMc1Z25zI9tHtEIYykGMC3PElYjdYEFTcVE7A_QbFIoMiwZIfDGLAyPG4JxTXbrMtFiHhBcntHKNpy2QrZrBJdCb8cTRJf') # set your FCM_SERVER_KEY
