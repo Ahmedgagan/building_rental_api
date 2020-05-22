@@ -13,6 +13,8 @@ module Api
       end
 
       def create
+        p "contact"
+        p params[:contact]
         file = params[:payment_receipt]
         params[:payment_receipt]= name = file.original_filename
         p params[:payment_receipt]
