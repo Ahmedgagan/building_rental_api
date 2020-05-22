@@ -302,7 +302,7 @@ module Api
           return "booking receipt not saved because receipt already exists", "0"
         end
         path = 'app/assets/'+params[:booked_by_user_id].to_s+'/'
-        File.open(path, "wb") do |f|
+        Dir.chdir(path) do |f|
           name = f.write(File.read(file))
           p "name"
           p name
