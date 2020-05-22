@@ -290,12 +290,11 @@ module Api
 
       def new_booking(params)
         path = 'app/assets/'
+        file = params[:payment_receipt]
+        params[:payment_receipt]= name = file.original_filename
         Dir.mkdir(path) unless Dir.exist?(path)
         Dir.mkdir(path+'/'+params[:booked_by_user_id].to_s) unless Dir.exist?(path+'/'+params[:booked_by_user_id].to_s)
         path += params[:booked_by_user_id].to_s+'/'+name
-        
-        file = params[:payment_receipt]
-        params[:payment_receipt]= name = file.original_filename
         
         p "path"
         p path
@@ -314,7 +313,7 @@ module Api
           p "name"
           p name
         end
-        
+
         unless File.exist?(path)
           return "booking receipt not saved", "0"
         end
