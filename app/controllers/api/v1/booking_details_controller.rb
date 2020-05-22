@@ -303,7 +303,7 @@ module Api
         File.open(path, "wb") do |f|
           f.write(File.read(file))
         end
-        path += '/'+name
+        
         unless File.exist?(path)
           return "booking receipt not saved", "0"
         end
