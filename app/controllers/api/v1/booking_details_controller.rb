@@ -289,7 +289,6 @@ module Api
       def new_booking(params)
         file = params[:payment_receipt]
         params[:payment_receipt]= name = file.original_filename
-        //'app/assets/"+params[:id]+"/"+params[:name]'
         path = 'app/assets/"+params[:booked_by_user_id]+"/"+params[:name]'
         # path = getFilePath(params[:booked_by_user_id], name)
         unit_details = UnitDetail.find(params[:unit_id])
