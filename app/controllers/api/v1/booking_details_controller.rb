@@ -301,7 +301,7 @@ module Api
         if File.exist?(path)
           return "booking receipt not saved because receipt already exists", "0"
         end
-        path = 'app/assets/'+params[:booked_by_user_id].to_s+'/'
+        path = 'app/assets/'+params[:booked_by_user_id].to_s
         Dir.chdir(path) do |f|
           name = f.write(File.read(file))
           p "name"
