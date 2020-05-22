@@ -290,6 +290,8 @@ module Api
         file = params[:payment_receipt]
         params[:payment_receipt]= name = file.original_filename
         path = 'app/assets/'+params[:booked_by_user_id].to_s+'/'+name
+        p "path"
+        p path
         # path = getFilePath(params[:booked_by_user_id], name)
         unit_details = UnitDetail.find(params[:unit_id])
         if unit_details.is_booked && unit_details.unit_availability=='Available'
@@ -299,11 +301,13 @@ module Api
         if File.exist?(path)
           return "booking receipt not saved because receipt already exists", "0"
         end
-
+        path = 'app/assets/'+params[:booked_by_user_id].to_s+'/'
         File.open(path, "wb") do |f|
-          f.write(File.read(file))
+          name = f.write(File.read(file))
+          p "name"
+          p name
         end
-        
+        path += name
         unless File.exist?(path)
           return "booking receipt not saved", "0"
         end
