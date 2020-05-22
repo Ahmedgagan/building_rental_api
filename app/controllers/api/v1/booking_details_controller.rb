@@ -12,12 +12,6 @@ module Api
         render json: {status: '1', msg: 'Booking detail Loaded', data: booking_details[0]}, status: :ok
       end
 
-      def getFilePath (id, name)
-        path = File.expand_path("../../../../assets/",__FILE__)
-        Dir.mkdir(path+id) unless Dir.exist?(path+id)
-        path = path+"/"+id+"/"+name
-      end
-
       def create
         booking_status = new_booking(params)
         if booking_status[1] == '1'
@@ -286,10 +280,18 @@ module Api
 
       private
 
+      def getFilePath (id, name)
+        path = File.expand_path("../../../../assets/",__FILE__)
+        Dir.mkdir(path+id) unless Dir.exist?(path+id)
+        path = path+"/"+id+"/"+name
+      end
+
       def new_booking(params)
         file = params[:payment_receipt]
         params[:payment_receipt]= name = file.original_filename
-        path = getFilePath(params[:booked_by_user_id], name)
+        //'app/assets/"+params[:id]+"/"+params[:name]'
+        path = 'app/assets/"+params[:booked_by_user_id]+"/"+params[:name]'
+        # path = getFilePath(params[:booked_by_user_id], name)
         unit_details = UnitDetail.find(params[:unit_id])
         if unit_details.is_booked && unit_details.unit_availability=='Available'
           return "this unit is already booked", "0"
