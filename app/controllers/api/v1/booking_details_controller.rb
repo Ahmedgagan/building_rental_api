@@ -94,9 +94,9 @@ module Api
         end
 
         update_details = update_booking(params)
-        data = receipt[2] if receipt[2]
-        data = {'error':receipt[0]} unless data
-        render json: {status: receipt[1], msg: receipt[0], data: data}, status: :ok
+        data = update_details[2] if update_details[2]
+        data = {'error':update_details[0]} unless data
+        render json: {status: update_details[1], msg: update_details[0], data: data}, status: :ok
         
         # booking_detail = BookingDetail.find(params[:id])
         # if params[:payment_receipt]
