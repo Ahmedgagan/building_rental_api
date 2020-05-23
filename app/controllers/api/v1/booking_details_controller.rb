@@ -289,7 +289,7 @@ module Api
 
       def getAllFiles
         a = Dir["app/assets/"+params[:id].to_s+"/*"]
-        render json: {status: '1', msg: 'Booking details of Agent', data:a}, status: :ok
+        render json: {status: '1', msg: 'Booking receipts of Agent', data:a}, status: :ok
       end
 
       private
@@ -339,6 +339,7 @@ module Api
       end
 
       def update_receipt(params)
+        p "update receipt"
         booking_detail = BookingDetail.find(params[:id])
         path = "app/assets/"
         file = params[:payment_receipt]
