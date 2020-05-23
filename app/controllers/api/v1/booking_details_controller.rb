@@ -84,6 +84,8 @@ module Api
       end
 
       def update
+        p "params"
+        p params
         receipt = nil
         if params[:payment_receipt]
           receipt = update_receipt(params)
