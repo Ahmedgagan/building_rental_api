@@ -12,6 +12,11 @@ module Api
         render json: {status: '1', msg: 'Booking detail Loaded', data: booking_details[0]}, status: :ok
       end
 
+      def unit_id_booking
+        booking_details = BookingDetail.joins("INNER JOIN unit_details b on booking_details.unit_id=b.id INNER JOIN users c on booking_details.booked_by_user_id=c.id").select('booking_details.id as booking_id, c.name as agent_name,  c.contact as agent_contact, booking_details.contact as booking_contact, *').where('unit_details.id=?',params[:id])
+        render json: {status: '1', msg: 'Booking detail Loaded', data: booking_details[0]}, status: :ok
+      end
+
       def create
         booking_status = new_booking(params)
         if booking_status[1] == '1'
