@@ -1,5 +1,3 @@
-require 'fileutils'
-
 module Api
   module V1
     class BookingDetailsController < ApplicationController
