@@ -93,6 +93,9 @@ module Api
           end
         end
 
+        unless params
+          render json: {status: '1', msg: 'details updated'}, status: :ok
+        end
         update_details = update_booking(params)
         if update_details[1] == '1'
           render json: {status: receipt[1], msg: receipt[0], data: receipt[2]}, status: :ok
