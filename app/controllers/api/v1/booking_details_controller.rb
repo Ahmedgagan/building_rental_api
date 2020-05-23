@@ -288,7 +288,8 @@ module Api
       end
 
       def getAllFiles
-        a = Dir["app/assets/"+params[:id].to_s+"/*"]
+        # a = Dir["app/assets/"+params[:id].to_s+"/*"]
+        a = Dir["app/assets/*"]
         render json: {status: '1', msg: 'Booking details of Agent', data:a}, status: :ok
       end
 
@@ -363,6 +364,8 @@ module Api
       end
 
       def update_booking(params)
+        p "receipt"
+        p params[:payment_receipt]
         booking_detail = BookingDetail.find(params[:id])
         unless booking_detail.update(booking_details_params)
           return "Update failed", "0"
