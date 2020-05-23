@@ -88,16 +88,16 @@ module Api
         if params[:payment_receipt]
           receipt = update_receipt(params)
           if receipt[1] == '0'
-            render json: {status: receipt[1], msg: receipt[0], data: {'error', receipt[0]}}, status: :ok
+            render json: {status: receipt[1], msg: receipt[0], data: {'error':receipt[0]}}, status: :ok
             return
           end
         end
 
         update_details = update_booking(params)
         if update_details[1] == '1'
-          render json: {status: receipt[1], msg: receipt[0], data: {'error', receipt[0]}}, status: :ok
-        else
           render json: {status: receipt[1], msg: receipt[0], data: receipt[2]}, status: :ok
+        else
+          render json: {status: receipt[1], msg: receipt[0], data: {'error':receipt[0]}}, status: :ok
         end
         
         # booking_detail = BookingDetail.find(params[:id])
@@ -352,7 +352,7 @@ module Api
         path = path+params[:booked_by_user_id].to_s+"/"+name
 
         if File.exist?(path)
-          "Receipt already exists", "0"
+          return "Receipt already exists", "0"
         end
 
         File.open(path, "wb") do |f|
