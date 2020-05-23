@@ -3,7 +3,7 @@ module Api
     class BookingDetailsController < ApplicationController
 
       def index
-        boking_details = BookingDetail.joins("INNER JOIN unit_details b on booking_details.unit_id=b.id INNER JOIN users c on booking_details.booked_by_user_id=c.id").select('booking_details.id as booking_id, c.name as agent_name , c.contact as agent_contact, booking_details.contact as contact, *').where('is_booked=true and booking_details.is_active=true')
+        boking_details = BookingDetail.joins("INNER JOIN unit_details b on booking_details.unit_id=b.id INNER JOIN users c on booking_details.booked_by_user_id=c.id").select('booking_details.id as booking_id, c.name as agent_name , booking_details.contact, *').where('is_booked=true and booking_details.is_active=true')
         render json: {status: '1', msg: 'All booking details Loaded', data: boking_details}, status: :ok
       end
 
