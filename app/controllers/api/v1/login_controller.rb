@@ -16,7 +16,7 @@ module Api
             render json: {status: '1', msg: 'Saved User',data: user}, status: :ok
           end
         else
-          render json: {status: '0', msg: 'User not saved', data: user.errors}, status: :ok  
+          render json: {status: '0', msg: 'Email or User Name already exists', data: user.errors}, status: :ok  
         end
       end
 
