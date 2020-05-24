@@ -17,7 +17,7 @@ module Api
         if booking_detail.length > 0
           render json: {status: '1', msg: 'Booking Detail Loaded', data: booking_details[0]}, status: :ok
         else
-          render json: {status: '0', msg: 'Booking Detail Not Found', data: booking_details[0]}, status: :ok
+          render json: {status: '0', msg: 'Booking Detail Not Found'}, status: :ok
         end
         
       end
