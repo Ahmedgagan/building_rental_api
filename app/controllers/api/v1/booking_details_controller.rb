@@ -13,8 +13,13 @@ module Api
       end
 
       def unit_id_booking
-        booking_details = BookingDetail.joins("INNER JOIN unit_details b on booking_details.unit_id=b.id INNER JOIN users c on booking_details.booked_by_user_id=c.id").select('booking_details.id as booking_id, c.name as agent_name,  c.contact as agent_contact, booking_details.contact as booking_contact, *').where('b.id=?',params[:id])
-        render json: {status: '1', msg: 'Booking detail Loaded', data: booking_details[0]}, status: :ok
+        booking_details = BookingDetail.joins("INNER JOIN unit_details b on booking_details.unit_id=b.id INNER JOIN users c on booking_details.booked_by_user_id=c.id").select('booking_details.id as booking_id, c.name as agent_name,  c.contact as agent_contact, booking_details.contact as booking_contact, *').where('b.id=?, b.is_booked=true AND booking_details.is_active=true',params[:id])
+        if booking_detail.length > 0
+          render json: {status: '1', msg: 'Booking Detail Loaded', data: booking_details[0]}, status: :ok
+        else
+          render json: {status: '0', msg: 'Booking Detail Not Found', data: booking_details[0]}, status: :ok
+        end
+        
       end
 
       def create
