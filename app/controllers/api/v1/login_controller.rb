@@ -3,20 +3,28 @@ module Api
     class LoginController < ApplicationController
       def signup
         user = User.new(user_params)
-        if user.save
-          if params[:user_type]=="AGENT"
-            agentDetail = AgentDetail.new(user_id:user.id,REN:params[:REN],SPA_signed:params[:SPA_signed])
-            if agentDetail.save
-              login = User.where("email=? AND password=? AND is_active=true",params[:email],params[:password]).joins("INNER JOIN agent_details b on users.id = b.user_id").select("*")
-              render json: {status: '1', msg: 'saved user and agent details',data: login[0]}, status: :ok
+        begin
+          if user.save
+            if params[:user_type]=="AGENT"
+              agentDetail = AgentDetail.new(user_id:user.id,REN:params[:REN],SPA_signed:params[:SPA_signed])
+              if agentDetail.save
+                login = User.where("email=? AND password=? AND is_active=true",params[:email],params[:password]).joins("INNER JOIN agent_details b on users.id = b.user_id").select("*")
+                render json: {status: '1', msg: 'saved user and agent details',data: login[0]}, status: :ok
+              else
+                render json: {status: '0', msg: 'agent details not saved', data: login.errors}, status: :ok
+              end
             else
-              render json: {status: '0', msg: 'agent details not saved', data: login.errors}, status: :ok
+              render json: {status: '1', msg: 'Saved User',data: user}, status: :ok
             end
           else
-            render json: {status: '1', msg: 'Saved User',data: user}, status: :ok
+            render json: {status: '0', msg: 'Error signing up', data: user.errors}, status: :ok  
           end
-        else
-          render json: {status: '0', msg: 'Email or User Name already exists', data: user.errors}, status: :ok  
+        rescue StandardError, AnotherError => e
+          if e.message.include? "PG::UniqueViolation: ERROR:"
+            render json: {status: '0', msg: 'Email or User Name or Contact already exists', data: user.errors}, status: :ok  
+          else
+            render json: {status: '0', msg: 'Error caused', data: e}, status: :ok  
+          end
         end
       end
 
