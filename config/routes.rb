@@ -17,7 +17,7 @@ Rails.application.routes.draw do
       get '/image' => 'booking_details#image'
       get '/bookings' => 'booking_details#bookings'
       get '/reciepts' => 'booking_details#getAllFiles'
-      get '/unit_id_booking/#id' => 'booking_details#unit_id_booking'
+      get '/unit_id_booking/:id' => 'booking_details#unit_id_booking'
     end
   end
 end
