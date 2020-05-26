@@ -76,7 +76,7 @@ module Api
           unit_details = UnitDetail.find(booking_detail[:unit_id])
           if unit_details.update(:is_booked=>false)
             user = User.find(params[:admin_user_id])
-            action = "Booking of unit: "+unit_details[:unit_type]+" canceled by "+user[:name]
+            action = "Booking of unit: "+unit_details[:unit_block]+"-"+unit_details[:unit_floor]+"-"+unit_details[:unit_number]+" canceled by "+user[:name]
             log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :admin_user_id=>params[:admin_user_id],:remark=>params[:remark])
             log.save
             ## send notification
@@ -339,7 +339,7 @@ module Api
         end
 
         user = User.find(booking_detail[:booked_by_user_id])
-        action = "New booking of unit: "+unit_details[:unit_type]+" done by "+user[:name]
+        action = "New booking of unit: "+unit_details[:unit_block]+"-"+unit_details[:unit_floor]+"-"+unit_details[:unit_number]+" done by "+user[:name]
         log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"New Booking", :admin_user_id=>params[:booked_by_user_id])
         log.save
         ## send notification
@@ -397,9 +397,9 @@ module Api
         if params[:booking_confirmation] != nil
           action = nil
           if params[:booking_confirmation] == true
-            action = "Booking confirmed of "+unit_details[:unit_type]+" by "+user[:name]
+            action = "Booking confirmed of "+unit_details[:unit_block]+"-"+unit_details[:unit_floor]+"-"+unit_details[:unit_number]+" by "+user[:name]
           else
-            action = "Booking cancelled of "+unit_details[:unit_type]+" by "+user[:name]
+            action = "Booking cancelled of "+unit_details[:unit_block]+"-"+unit_details[:unit_floor]+"-"+unit_details[:unit_number]+" by "+user[:name]
           end
           log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"Booking Confirmation Updated", :admin_user_id=>params[:admin_user_id])
           log.save
@@ -410,9 +410,9 @@ module Api
         if params[:SPA_signed] != nil
           action = nil
           if params[:SPA_signed] == true
-            action = "SPA signed of "+unit_details[:unit_type]+" by "+user[:name]
+            action = "SPA signed of "+unit_details[:unit_block]+"-"+unit_details[:unit_floor]+"-"+unit_details[:unit_number]+" by "+user[:name]
           else
-            action = "SPA Unsigned of "+unit_details[:unit_type]+" by "+user[:name]
+            action = "SPA Unsigned of "+unit_details[:unit_block]+"-"+unit_details[:unit_floor]+"-"+unit_details[:unit_number]+" by "+user[:name]
           end
           log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"SPA Signed Updated", :admin_user_id=>params[:admin_user_id])
           log.save
@@ -423,9 +423,9 @@ module Api
         if params[:disbursement] != nil
           action = nil
           if params[:disbursement] == true
-            action = "disbursment done of "+unit_details[:unit_type]+" by "+user[:name]
+            action = "disbursment done of "+unit_details[:unit_block]+"-"+unit_details[:unit_floor]+"-"+unit_details[:unit_number]+" by "+user[:name]
           else
-            action = "disbursment not done of "+unit_details[:unit_type]+" by "+user[:name]
+            action = "disbursment not done of "+unit_details[:unit_block]+"-"+unit_details[:unit_floor]+"-"+unit_details[:unit_number]+" by "+user[:name]
           end
           log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"Disbursment details Updated", :admin_user_id=>params[:admin_user_id])
           log.save
@@ -436,9 +436,9 @@ module Api
         if params[:handover] != nil
           action = nil
           if params[:handover] == true
-            action = "handover done of "+unit_details[:unit_type]+" by "+user[:name]
+            action = "handover done of "+unit_details[:unit_block]+"-"+unit_details[:unit_floor]+"-"+unit_details[:unit_number]+" by "+user[:name]
           else
-            action = "handover not done of "+unit_details[:unit_type]+" by "+user[:name]
+            action = "handover not done of "+unit_details[:unit_block]+"-"+unit_details[:unit_floor]+"-"+unit_details[:unit_number]+" by "+user[:name]
           end
           log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"Handover details Updated", :admin_user_id=>params[:admin_user_id])
           log.save
