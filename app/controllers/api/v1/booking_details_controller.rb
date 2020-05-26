@@ -77,7 +77,7 @@ module Api
           if unit_details.update(:is_booked=>false)
             user = User.find(params[:admin_user_id])
             action = "Booking of unit: "+unit_details[:unit_block]+"-"+unit_details[:unit_floor]+"-"+unit_details[:unit_number]+" canceled by "+user[:name]
-            log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :admin_user_id=>params[:admin_user_id],:remark=>params[:remark])
+            log = Log.new(:unit_number=>unit_details[:id], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :admin_user_id=>params[:admin_user_id],:remark=>params[:remark])
             log.save
             ## send notification
             reg_id = User.where("id!=?",user[:id]).select('token')
@@ -340,7 +340,7 @@ module Api
 
         user = User.find(booking_detail[:booked_by_user_id])
         action = "New booking of unit: "+unit_details[:unit_block]+"-"+unit_details[:unit_floor]+"-"+unit_details[:unit_number]+" done by "+user[:name]
-        log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"New Booking", :admin_user_id=>params[:booked_by_user_id])
+        log = Log.new(:unit_number=>unit_details[:id], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"New Booking", :admin_user_id=>params[:booked_by_user_id])
         log.save
         ## send notification
         reg_id = User.where("id!=?",user[:id]).select('token')
@@ -401,7 +401,7 @@ module Api
           else
             action = "Booking cancelled of "+unit_details[:unit_block]+"-"+unit_details[:unit_floor]+"-"+unit_details[:unit_number]+" by "+user[:name]
           end
-          log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"Booking Confirmation Updated", :admin_user_id=>params[:admin_user_id])
+          log = Log.new(:unit_number=>unit_details[:id], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"Booking Confirmation Updated", :admin_user_id=>params[:admin_user_id])
           log.save
           ## send notification
           fcm_push_notification(action, registration_id, 'Booking Confirmation Updated')
@@ -414,7 +414,7 @@ module Api
           else
             action = "SPA Unsigned of "+unit_details[:unit_block]+"-"+unit_details[:unit_floor]+"-"+unit_details[:unit_number]+" by "+user[:name]
           end
-          log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"SPA Signed Updated", :admin_user_id=>params[:admin_user_id])
+          log = Log.new(:unit_number=>unit_details[:id], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"SPA Signed Updated", :admin_user_id=>params[:admin_user_id])
           log.save
           ## send notification
           fcm_push_notification(action, registration_id, 'SPA Signed Updated')
@@ -427,7 +427,7 @@ module Api
           else
             action = "disbursment not done of "+unit_details[:unit_block]+"-"+unit_details[:unit_floor]+"-"+unit_details[:unit_number]+" by "+user[:name]
           end
-          log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"Disbursment details Updated", :admin_user_id=>params[:admin_user_id])
+          log = Log.new(:unit_number=>unit_details[:id], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"Disbursment details Updated", :admin_user_id=>params[:admin_user_id])
           log.save
           ## send notification
           fcm_push_notification(action, registration_id, 'Disbursement details Updated')
@@ -440,7 +440,7 @@ module Api
           else
             action = "handover not done of "+unit_details[:unit_block]+"-"+unit_details[:unit_floor]+"-"+unit_details[:unit_number]+" by "+user[:name]
           end
-          log = Log.new(:unit_number=>unit_details[:unit_number], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"Handover details Updated", :admin_user_id=>params[:admin_user_id])
+          log = Log.new(:unit_number=>unit_details[:id], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"Handover details Updated", :admin_user_id=>params[:admin_user_id])
           log.save
           ## send notification
           fcm_push_notification(action, registration_id, 'Handover Details Updated')
