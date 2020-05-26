@@ -389,7 +389,7 @@ module Api
         end
 
         unit_details = UnitDetail.find(booking_detail[:unit_id])
-        user = User.find(booking_detail[:booked_by_user_id])
+        user = User.find(booking_detail[:admin_user_id])
         reg_id = User.where("id!=?",user[:id]).select('token')
         registration_id = []
         reg_id.each{ |x| registration_id.push x[:token]}
