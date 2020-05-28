@@ -282,7 +282,7 @@ module Api
 
       def image
         if params[:name] && params[:id]
-          path = "app/assets/"+params[:id]+"/"+params[:name]
+          path = "public/assets/"+params[:id]+"/"+params[:name]
           if File.exist?(path)
             send_file path, disposition: 'download'
           else
@@ -299,14 +299,14 @@ module Api
       end
 
       def getAllFiles
-        a = Dir["app/assets/"+params[:id].to_s+"/*"]
+        a = Dir["public/assets/"+params[:id].to_s+"/*"]
         render json: {status: '1', msg: 'Booking receipts of Agent', data:a}, status: :ok
       end
 
       private
 
       def new_booking(params)
-        path = 'app/assets/'
+        path = 'public/assets/'
         file = params[:payment_receipt]
         params[:payment_receipt]= name = file.original_filename
         Dir.mkdir(path) unless Dir.exist?(path)
@@ -352,7 +352,7 @@ module Api
       def update_receipt(params)
         p "update receipt"
         booking_detail = BookingDetail.find(params[:id])
-        path = "app/assets/"
+        path = "public/assets/"
         file = params[:payment_receipt]
         name = file.original_filename
         params[:payment_receipt]= file.original_filename
@@ -360,7 +360,7 @@ module Api
         # p "path"
         # p path
         # File.delete(path) if File.exist?(path)
-        path = "app/assets/"
+        path = "public/assets/"
         Dir.mkdir(path) unless Dir.exist?(path)
         path = path+booking_detail.booked_by_user_id.to_s
         Dir.mkdir(path) unless Dir.exist?(path)
