@@ -73,7 +73,7 @@ module Api
         booking_detail = BookingDetail.find(params[:id])
         if booking_detail.update(:is_active=>false, :remark=>params[:remark])
           unit_details = UnitDetail.find(booking_detail[:unit_id])
-          if unit_details.update(:is_booked=>false, unit_availability=> "Available")
+          if unit_details.update(:is_booked=>false, :unit_availability=> "Available")
             user = User.find(params[:admin_user_id])
             action = "Booking of unit: "+unit_details[:unit_block]+"-"+unit_details[:unit_floor]+"-"+unit_details[:unit_number]+" canceled by "+user[:name]
             log = Log.new(:unit_number=>booking_detail[:id], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :admin_user_id=>params[:admin_user_id],:remark=>params[:remark])
@@ -331,7 +331,7 @@ module Api
         end
 
         booking_detail = BookingDetail.new(booking_details_params)
-        unit_details.update(:is_booked=>true, unit_availability=> "Booked")
+        unit_details.update(:is_booked=>true, :unit_availability=> "Booked")
 
         unless booking_detail.save
           return "Booking details not saved", "0"
