@@ -300,6 +300,14 @@ module Api
 
       def getAllFiles
         a = Dir["public/assets/"+params[:id].to_s+"/*"]
+        if a.length < 1
+          a = Dir["public/assets/*"]
+        end
+
+        if a.length < 1
+          a = Dir["public/*"]
+        end
+        
         render json: {status: '1', msg: 'Booking receipts of Agent', data:a}, status: :ok
       end
 
