@@ -9,8 +9,6 @@ gem 'nokogiri', '~> 1.10', '>= 1.10.9'
 gem 'rails', '~> 6.0.2', '>= 6.0.2.2'
 # Use mysql as the database for Active Record
 gem 'mysql2', '>= 0.4.4'
-# Use postgrey as the database for Active Record
-gem 'pg'
 # Use Firebase Cloud Messaging to send notifications to user
 gem 'fcm'
 # Use Puma as the app server
