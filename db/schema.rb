@@ -10,12 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_24_130547) do
+ActiveRecord::Schema.define(version: 2020_06_06_145433) do
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
-  create_table "agent_details", force: :cascade do |t|
+  create_table "agent_details", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
     t.string "REN"
     t.boolean "SPA_signed"
@@ -23,14 +20,14 @@ ActiveRecord::Schema.define(version: 2020_05_24_130547) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "announcements", force: :cascade do |t|
+  create_table "announcements", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "text"
     t.integer "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "booking_details", force: :cascade do |t|
+  create_table "booking_details", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "booked_by_user_id"
     t.string "price"
     t.string "name"
@@ -47,7 +44,7 @@ ActiveRecord::Schema.define(version: 2020_05_24_130547) do
     t.boolean "handover"
   end
 
-  create_table "logs", force: :cascade do |t|
+  create_table "logs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "unit_number"
     t.integer "user_id"
     t.string "action"
@@ -57,7 +54,7 @@ ActiveRecord::Schema.define(version: 2020_05_24_130547) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "unit_details", force: :cascade do |t|
+  create_table "unit_details", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "unit_block"
     t.string "unit_block_name"
     t.string "unit_number"
@@ -73,11 +70,11 @@ ActiveRecord::Schema.define(version: 2020_05_24_130547) do
     t.boolean "is_booked"
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name"
     t.string "password"
     t.string "user_type"
-    t.text "contact"
+    t.string "contact"
     t.string "email"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
