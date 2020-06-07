@@ -3,19 +3,17 @@ module Api
     class BookingDetailsController < ApplicationController
 
       def index
-        p "time"
-        p Time.now
-        boking_details = BookingDetail.joins("INNER JOIN unit_details b on booking_details.unit_id=b.id INNER JOIN users c on booking_details.booked_by_user_id=c.id").select('booking_details.id as booking_id, booking_details.name as customer_name , c.contact as agent_contact, booking_details.contact as booking_contact, *').where('is_booked=true and booking_details.is_active=true')
+        boking_details = BookingDetail.joins("INNER JOIN unit_details b on booking_details.unit_id=b.id INNER JOIN users c on booking_details.booked_by_user_id=c.id").select('*, booking_details.id as booking_id, booking_details.name as customer_name , c.contact as agent_contact, booking_details.contact as booking_contact').where('is_booked=true and booking_details.is_active=true')
         render json: {status: '1', msg: 'All booking details Loaded', data: boking_details}, status: :ok
       end
 
       def show
-        booking_details = BookingDetail.joins("INNER JOIN unit_details b on booking_details.unit_id=b.id INNER JOIN users c on booking_details.booked_by_user_id=c.id").select('booking_details.id as booking_id, booking_details.name as customer_name,  c.contact as agent_contact, booking_details.contact as booking_contact, *').where('booking_details.id=?',params[:id])
+        booking_details = BookingDetail.joins("INNER JOIN unit_details b on booking_details.unit_id=b.id INNER JOIN users c on booking_details.booked_by_user_id=c.id").select('*, booking_details.id as booking_id, booking_details.name as customer_name,  c.contact as agent_contact, booking_details.contact as booking_contact').where('booking_details.id=?',params[:id])
         render json: {status: '1', msg: 'Booking detail Loaded', data: booking_details[0]}, status: :ok
       end
 
       def unit_id_booking
-        booking_details = BookingDetail.joins("INNER JOIN unit_details b on booking_details.unit_id=b.id INNER JOIN users c on booking_details.booked_by_user_id=c.id").select('booking_details.id as booking_id, booking_details.name as customer_name,  c.contact as agent_contact, booking_details.contact as booking_contact, *').where('b.id=? AND b.is_booked=true AND booking_details.is_active=true',params[:id])
+        booking_details = BookingDetail.joins("INNER JOIN unit_details b on booking_details.unit_id=b.id INNER JOIN users c on booking_details.booked_by_user_id=c.id").select('*, booking_details.id as booking_id, booking_details.name as customer_name,  c.contact as agent_contact, booking_details.contact as booking_contact').where('b.id=? AND b.is_booked=true AND booking_details.is_active=true',params[:id])
         if booking_details && booking_details.length > 0
           render json: {status: '1', msg: 'Booking Detail Loaded', data: booking_details[0]}, status: :ok
         else
@@ -296,7 +294,7 @@ module Api
       end
 
       def bookings
-        bookings = BookingDetail.where("booked_by_user_id=?",params[:id]).joins("INNER JOIN unit_details b on booking_details.unit_id=b.id").select('booking_details.id as booking_id ,*')
+        bookings = BookingDetail.where("booked_by_user_id=?",params[:id]).joins("INNER JOIN unit_details b on booking_details.unit_id=b.id").select('*, booking_details.id as booking_id')
         render json: {status: '1', msg: 'Booking details of Agent', data: bookings}, status: :ok
       end
 
