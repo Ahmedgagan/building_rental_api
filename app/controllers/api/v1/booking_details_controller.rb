@@ -322,7 +322,7 @@ module Api
         path += params[:booked_by_user_id].to_s+'/'+name
         unit_details = UnitDetail.find(params[:unit_id])
 
-        if unit_details.is_booked && unit_details.unit_availability=='Available'
+        if unit_details.is_booked && unit_details.unit_availability=='Booked'
           return "this unit is already booked", "0"
         end
 
@@ -453,6 +453,8 @@ module Api
           fcm_push_notification(action, registration_id, 'Handover Details Updated')
         end
 
+        if (params[:handover] != nil || params[:SPA_signed] != nil || params[booking_confirmation] != nil || params[:disbursement] != nil)
+          
         return "Booking details Updated", "1", booking_detail
 
       end
