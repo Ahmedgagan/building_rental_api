@@ -20,7 +20,9 @@ module Api
             render json: {status: '0', msg: 'Error signing up', data: user.errors}, status: :ok  
           end
         rescue StandardError, AnotherError => e
-          if e.message.include? "PG::UniqueViolation: ERROR:"
+          p "unique error"
+          p e.message
+          if e.message.include? "Duplicate entry"
             render json: {status: '0', msg: 'Email or User Name or Contact already exists', data: user.errors}, status: :ok  
           else
             render json: {status: '0', msg: 'Error caused', data: e}, status: :ok  

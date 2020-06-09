@@ -453,6 +453,10 @@ module Api
           fcm_push_notification(action, registration_id, 'Handover Details Updated')
         end
 
+        log = Log.new(:unit_number=>booking_detail[:id], :user_id=>booking_detail[:booked_by_user_id], :action=>action, :remark=>"Disbursment details Updated", :admin_user_id=>params[:admin_user_id])
+        log.save
+        ## send notification
+        fcm_push_notification(action, registration_id, 'Disbursement details Updated')
         return "Booking details Updated", "1", booking_detail
 
       end
