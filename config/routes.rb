@@ -18,6 +18,8 @@ Rails.application.routes.draw do
       get '/bookings' => 'booking_details#bookings'
       get '/reciepts' => 'booking_details#getAllFiles'
       get '/unit_id_booking/:id' => 'booking_details#unit_id_booking'
+      get '/marketing-tools-data' => 'marketing_tools#getAllFiles'
+      get '/marketing-tools-data/file' => 'marketing_tools#file'
     end
   end
 end
